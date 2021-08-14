@@ -1,4 +1,4 @@
-FROM composer:1.9.0 as build
+FROM composer:2.0 as build
 WORKDIR /app
 COPY . /app
 RUN composer global require hirak/prestissimo && composer install
