@@ -29,7 +29,17 @@ Route::get('/', function () {
         });
     $now = Carbon::now()->isoFormat("YYYY_MM_DD_HH_mm_ss");
 
-    return $priceData;
+    $bitcoin = new \App\Models\Bitcoin();
+    $bitcoin->coin_name = 'BitCoin';
+    $bitcoin->celling_price_24H = $priceData[0];
+    $bitcoin->best_price_24H = $priceData[1];
+    $bitcoin->volume = $priceData[2];
+    $bitcoin->time = $now;
+    $bitcoin->save();
+
+    return \App\Models\Bitcoin::get();
+
+//    return $priceData;
 
 //    return view('welcome');
 });
