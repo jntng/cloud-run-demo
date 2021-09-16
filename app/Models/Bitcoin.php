@@ -11,4 +11,10 @@ class Bitcoin extends Model
 
     protected $guarded = [];
 
+
+    public function getCoin() : int
+    {
+        return 1;
+    }
+
 }

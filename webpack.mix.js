@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const chokidar = require('chokidar');
 
 /*
  |--------------------------------------------------------------------------
@@ -6,12 +7,34 @@ const mix = require('laravel-mix');
  |--------------------------------------------------------------------------
  |
  | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel applications. By default, we are compiling the CSS
- | file for the application as well as bundling up all the JS files.
+ | for your Laravel application. By default, we are compiling the Sass
+ | file for the application as well as bundling up a
+ ll the JS files.
  |
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+    .vue()
+    .sass('resources/sass/app.scss', 'public/css');
+
+mix.options({
+    hmrOptions: {
+        host: 'localhost',
+        port: 8080,
+    },
+});
+
+mix.webpackConfig({
+    devServer: {
+        host: '0.0.0.0',
+        port: 8080,
+        onBeforeSetupMiddleware(server) {
+            chokidar.watch([
+                './resources/views/**/*.blade.php',
+                './resources/js/**/*.js'
+            ]).on('all', function() {
+                server.sockWrite(server.sockets, 'content-changed');
+            })
+        },
+    },
+});

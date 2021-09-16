@@ -8,9 +8,16 @@
         "php": "^7.3|^8.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "laravel/cashier": "^13.5",
         "laravel/framework": "^8.54",
+        "laravel/slack-notification-channel": "^2.3",
         "laravel/tinker": "^2.5",
-        "symfony/dom-crawler": "^5.3"
+        "laravel/ui": "^3.3",
+        "league/omnipay": "^3.2",
+        "omnipay-taiwan/omnipay-mypay": "^0.0.1",
+        "paypal/rest-api-sdk-php": "*",
+        "symfony/dom-crawler": "^5.3",
+        "tsaiyihua/laravel-ecpay": "^2.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

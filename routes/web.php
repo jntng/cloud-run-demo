@@ -1,9 +1,6 @@
 <?php
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\DomCrawler\Crawler;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,30 +13,30 @@ use Symfony\Component\DomCrawler\Crawler;
 |
 */
 
-Route::get('/', function () {
+//Route::get('/', ['App\Http\Controllers\HomeController','index']);
 
-    $response = Http::get('https://crypto.cnyes.com/BTC/24h');
-    $outputString = $response->body();
+Route::get('/send', ['App\Http\Controllers\HomeController','send']);
 
-    $crawler = new Crawler($outputString);
-    $priceData = $crawler
-        ->filter('.item-value')
-        ->each( function (Crawler $node) {
-            return $node->text();
-        });
-    $now = Carbon::now()->isoFormat("YYYY_MM_DD_HH_mm_ss");
+Route::get('/codewar/{id}/{input}', 'App\Http\Controllers\CodeWarController');
 
-    $bitcoin = new \App\Models\Bitcoin();
-    $bitcoin->coin_name = 'BitCoin';
-    $bitcoin->celling_price_24H = $priceData[0];
-    $bitcoin->best_price_24H = $priceData[1];
-    $bitcoin->volume = $priceData[2];
-    $bitcoin->time = $now;
-    $bitcoin->save();
+//Route::prefix('/payment')->name('payment.')->group(function() {
+////發起付款
+//    Route::get('/request', [\App\Http\Controllers\PaymentController::class, 'request'])->name('request');
+////接受通知
+//    Route::post('/notify', [\App\Http\Controllers\PaymentController::class, 'notify'])->name('notify');
+////通知使用者完成
+//    Route::post('/result', [\App\Http\Controllers\PaymentController::class, 'result'])->name('result');
+//});
 
-    return \App\Models\Bitcoin::get();
+//Payment
 
-//    return $priceData;
+//payment form
+Route::get('/', 'App\Http\Controllers\NewPaymentController@index')->name("/");
+Route::get('/success', 'App\Http\Controllers\NewPaymentController@success')->name("/success");
 
-//    return view('welcome');
+Route::prefix('/payment')->group(function() {
+
+    Route::get('/', ['as' => 'payment', 'uses' => 'App\Http\Controllers\NewPaymentController@payWithpaypal']);
+    Route::any('/status', ['as' => 'status', 'uses' => 'App\Http\Controllers\NewPaymentController@getPaymentStatus']);
+
 });
